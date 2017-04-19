@@ -1,0 +1,3 @@
+[submodule "lokkit_doorman/ethjsonrpc"]
+	path = lokkit_doorman/ethjsonrpc
+	url = git@github.com:lokkit/ethjsonrpc.git
