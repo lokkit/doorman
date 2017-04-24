@@ -3,6 +3,7 @@ lokkit doorman
 ===============================
 
 Python service that listens on local ethereum node for incomming whisper messages.
+Specify your own config.yml and run lokkit_doorman.py.
 
 * Free software: MIT license
 
