@@ -108,7 +108,7 @@ def main():
                 logger.info('Executing script "{0}" with argument "{1}" for rentable "{2}"'.format(script, message['command'], message['rentableAddress']))
                 
                 n = 0 if message['command'] == 'lock' else 1
-                subprocess.call([script, message['command']])
+                #subprocess.call([script, message['command']])
 
             sleep(1) # sleep 1 second
     except KeyboardInterrupt:
