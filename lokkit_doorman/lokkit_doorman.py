@@ -13,7 +13,7 @@ from ethjsonrpc.exceptions import ConnectionError
 
 # Setup logger
 logger = logging.getLogger('lokkitLogger')
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 if (os.name == 'posix'):
 	logger.addHandler(logging.handlers.SysLogHandler(address = '/dev/log'))
 logger.addHandler(logging.StreamHandler()) # log to console
@@ -41,18 +41,22 @@ def main():
         return
 
     # config
-    description = c.call(rentable_address, 'description()', [], ['string'])[0]
-    deposit = c.call(rentable_address, 'deposit()', [], ['uint256'])[0]
-    location = c.call(rentable_address, 'location()', [], ['string'])[0]
-    costPerSecond = c.call(rentable_address, 'costPerSecond()', [], ['uint256'])[0]
-    current_renter = c.call(rentable_address, 'currentRenter()', [], ['address'])[0]
-    logger.info('Configured rentable contract {0}\n\
-  description: {1}\n\
-  location: {2}\n\
-  deposit: {3}\n\
-  costPerSecond: {4}\n\
-  current_renter: {5}'.format(rentable_address, description, location,
-                  deposit, costPerSecond, current_renter))
+    try:
+        description = c.call(rentable_address, 'description()', [], ['string'])[0]
+        deposit = c.call(rentable_address, 'deposit()', [], ['uint256'])[0]
+        location = c.call(rentable_address, 'location()', [], ['string'])[0]
+        costPerSecond = c.call(rentable_address, 'costPerSecond()', [], ['uint256'])[0]
+        current_renter = c.call(rentable_address, 'currentRenter()', [], ['address'])[0]
+        logger.info('Configured rentable contract {0}\n\
+      description: {1}\n\
+      location: {2}\n\
+      deposit: {3}\n\
+      costPerSecond: {4}\n\
+      current_renter: {5}'.format(rentable_address, description, location,
+                      deposit, costPerSecond, current_renter))
+    except AssertionError:
+        logger.error('Address {0} is not a Rentable'.format(rentable_address))
+        return
 
     # TODO: implement correct filter
     filter_id = c.shh_newFilter("", ['rentable'])
