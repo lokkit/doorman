@@ -1,4 +1,5 @@
 doorman:
-    node_url: 127.0.0.1:8545
+    node_ip: 127.0.0.1
+    node_rpc_port: 8545
     rentable_address: "0xf16801293f34fc16470729f4ac91185595aa6e10"
     script: leFile.bat

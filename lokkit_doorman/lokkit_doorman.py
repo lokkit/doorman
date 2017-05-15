@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 import logging
 import logging.handlers
 import json
 import subprocess
 import yaml
+
 from collections import OrderedDict
 from time import sleep
 from ethjsonrpc import EthJsonRpc
@@ -18,17 +20,94 @@ if (os.name == 'posix'):
 	logger.addHandler(logging.handlers.SysLogHandler(address = '/dev/log'))
 logger.addHandler(logging.StreamHandler()) # log to console
 
+def _print_help():
+    print """
+Usage: lokkit-doorman.py <configfile>
+
+If you don't specify the <configfile> it will try to read /etc/lokkit/doorman.yml
+
+Example config.yml:
+doorman:
+    node_url: 127.0.0.1:8545
+    rentable_address: "0xf16801293f34fc16470729f4ac91185595aa6e10"
+    script: /path/to/script/to/execute.sh
+"""
+
+def _check_if_exists(yaml_doc, attribute):
+    """
+    Checks if attribute exists in yaml_doc and log, if it does
+    not exist
+
+    Args:
+        yaml_doc: The doc received by yaml.load()
+        attribute: The attribute as string
+
+    Returns:
+        True if successful
+    """
+    if not yaml_doc.has_key(attribute):
+        logger.error('Error in config file: missing "{}"'.format(attribute))
+        return False
+    return True
+
+def _parse_config_file(config_filepath):
+    """
+    Parses the given config file and returns dict holding
+    the configuration
+
+    Args:
+        config_filepath: The file path of the configuration yml
+
+    Returns:
+        A dict holding the configuration or None if an error
+        occured.
+    """
+    doc = None
+    with open(config_filepath, "r") as file:
+        doc = yaml.load(file)
+
+    if not _check_if_exists(doc, 'doorman'):
+        return None
+
+    doc = doc.get('doorman')
+
+    ret = True
+    ret = ret and _check_if_exists(doc, 'node_ip')
+    ret = ret and _check_if_exists(doc, 'node_rpc_port')
+    ret = ret and _check_if_exists(doc, 'rentable_address')
+    ret = ret and _check_if_exists(doc, 'script')
+
+    if ret:
+        return doc
+    else:
+        return None
+
+
 def main():
-    print('Started')
-    configFile = open("config.yml", "r")
-    doc = yaml.load(configFile)
-    root = doc['doorman']
-    parts = root['node_url'].split(':')
-    port = parts[1]
-    host = parts[0]
-    rentable_address = root['rentable_address']
-    script = root['script']
-    logger.warn('Connecting to {0}:{1}'.format(host, port))
+    if len(sys.argv) < 2:
+        config_filepath = "/etc/lokkit/doorman.yml"
+    else:
+        config_filepath = sys.argv[1]
+
+    if not os.path.isfile(config_filepath):
+        logger.error('Error reading the config file "{}": The file does not exist'
+                     .format(config_filepath))
+        _print_help()
+        return 1
+
+    logger.info("Reading config file: {}".format(config_filepath))
+    config = _parse_config_file(config_filepath)
+    if not config:
+        logger.error("Config file could not be parsed: {}".format(config_filepath))
+        _print_help()
+        return 1
+
+    host = config['node_ip']
+    port = config['node_rpc_port']
+    rentable_address = config['rentable_address']
+    script = config['script']
+
+    logger.info('Connecting to {0}:{1}'.format(host, port))
     c = EthJsonRpc(host, port)
 
     try:
@@ -106,7 +185,7 @@ def main():
                     continue
 
                 logger.info('Executing script "{0}" with argument "{1}" for rentable "{2}"'.format(script, message['command'], message['rentableAddress']))
-                
+
                 n = 0 if message['command'] == 'lock' else 1
                 subprocess.call([script, message['command']])
 
