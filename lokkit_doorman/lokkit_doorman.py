@@ -171,7 +171,7 @@ def main():
                 logger.debug('message_json_string {0}\nmessage_json_string_hex {1}'
                         .format(message_json, message_hex_string))
 
-                signer = c.personal_ecRevoer(message_hex_string, signature)
+                signer = c.personal_ecRecover(message_hex_string, signature)
                 key = lokkit_message['key']
 
                 logger.info('command "{0}", rentableAddress "{1}", key "{2}"'
