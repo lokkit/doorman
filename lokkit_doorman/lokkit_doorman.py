@@ -6,11 +6,10 @@ import logging
 import logging.handlers
 import json
 import subprocess
-import yaml
-
-import sha3
 from collections import OrderedDict
 from time import sleep
+import sha3
+import yaml
 from ethjsonrpc import EthJsonRpc
 from ethjsonrpc.exceptions import ConnectionError
 
@@ -57,7 +56,7 @@ def _check_if_min_array_length(yaml_doc, attribute, length):
             logger.error('Error in config file: at least {0} element(s) required\
  for attribute "{1}".'.format(length, attribute))
             return False
-    except TypeError as e:
+    except TypeError:
         logger.error('Error in config file: not an array: "{}"'.format(attribute))
         return False
 
@@ -94,8 +93,8 @@ def _parse_config_file(config_filepath):
         occured.
     """
     doc = None
-    with open(config_filepath, "r") as file:
-        doc = yaml.load(file)
+    with open(config_filepath, "r") as config_file:
+        doc = yaml.load(config_file)
 
     if not _check_if_exists(doc, 'doorman'):
         return None
@@ -115,8 +114,12 @@ def _parse_config_file(config_filepath):
     else:
         return None
 
-
 def main():
+    """
+    Runs doorman and listens for incoming whispers on the configured node.
+    When receiving a valid command, starts the configured script with the
+    arguments address and command.
+    """
     if len(sys.argv) < 2:
         config_filepath = "/etc/lokkit/doorman.yml"
     else:
