@@ -19,12 +19,12 @@ test_requirements = [
 
 setup(
     name='lokkit_doorman',
-    version='0.1.0',
-    description="Python service that listens on local ethereum node for incomming whisper messages.",
+    version='0.2.0',
+    description="Python service that listens on an ethereum node for incoming whisper messages.",
     long_description=readme + '\n\n' + history,
     author="Andreas Schmid",
     author_email='ikeark@gmail.com',
-    url='https://github.com/kraeki/lokkit_doorman',
+    url='https://github.com/lokkit/doorman',
     packages=[
         'lokkit_doorman',
     ],
