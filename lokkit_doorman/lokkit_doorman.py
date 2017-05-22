@@ -31,10 +31,35 @@ Example config.yml:
 doorman:
     node_ip: 127.0.0.1
     node_rpc_port: 8545
-    rentable_address: "0xf16801293f34fc16470729f4ac91185595aa6e10"
+    rentable_addresses:
+        - "0xf16801293f34fc16470729f4ac91185595aa6e10"
     symmetric_key_password: lokkit
     script: /path/to/script/to/execute.sh
 """
+
+def _check_if_min_array_length(yaml_doc, attribute, length):
+    """
+    Checks if attribute of at least given length exists in
+    yaml_doc and log, if not
+
+    Args:
+        yaml_doc: The doc received by yaml.load()
+        attribute: The attribute as string
+        length: The inclusive lower bound for number of elements
+
+    Returns:
+        True if successful
+    """
+    try:
+        if len(yaml_doc[attribute]) >= length:
+            return True
+        else:
+            logger.error('Error in config file: at least {0} element(s) required\
+ for attribute "{1}".'.format(length, attribute))
+            return False
+    except TypeError as e:
+        logger.error('Error in config file: not an array: "{}"'.format(attribute))
+        return False
 
 def _check_if_exists(yaml_doc, attribute):
     """
@@ -49,7 +74,10 @@ def _check_if_exists(yaml_doc, attribute):
         True if successful
     """
     if not yaml_doc.has_key(attribute):
-        logger.error('Error in config file: missing "{}"'.format(attribute))
+        logger.error('Error in config file: missing key "{}"'.format(attribute))
+        return False
+    if yaml_doc[attribute] is None:
+        logger.error('Error in config file: missing value for key "{}"'.format(attribute))
         return False
     return True
 
@@ -77,7 +105,8 @@ def _parse_config_file(config_filepath):
     ret = True
     ret = ret and _check_if_exists(doc, 'node_ip')
     ret = ret and _check_if_exists(doc, 'node_rpc_port')
-    ret = ret and _check_if_exists(doc, 'rentable_address')
+    ret = ret and _check_if_exists(doc, 'rentable_addresses')
+    ret = ret and _check_if_min_array_length(doc, 'rentable_addresses', 1)
     ret = ret and _check_if_exists(doc, 'symmetric_key_password')
     ret = ret and _check_if_exists(doc, 'script')
 
@@ -108,7 +137,7 @@ def main():
 
     host = config['node_ip']
     port = config['node_rpc_port']
-    rentable_address = config['rentable_address']
+    rentable_addresses = config['rentable_addresses']
     script = config['script']
     symmetric_key_password = config['symmetric_key_password']
 
@@ -125,28 +154,32 @@ def main():
         return
 
     # config
-    try:
-        description = c.call(rentable_address, 'description()', [], ['string'])[0]
-        deposit = c.call(rentable_address, 'deposit()', [], ['uint256'])[0]
-        location = c.call(rentable_address, 'location()', [], ['string'])[0]
-        costPerSecond = c.call(rentable_address, 'costPerSecond()', [], ['uint256'])[0]
-        current_renter = c.call(rentable_address, 'currentRenter()', [], ['address'])[0]
-        logger.info('Configured rentable contract {0}\n\
-      description: {1}\n\
-      location: {2}\n\
-      deposit: {3}\n\
-      costPerSecond: {4}\n\
-      current_renter: {5}'.format(rentable_address, description, location,
-                                  deposit, costPerSecond, current_renter))
-    except AssertionError:
-        logger.error('Address {0} is not a Rentable'.format(rentable_address))
-        return
+    topics = []
+    logger.info('listening for whispers for {0} addresses'.format(len(rentable_addresses)))
+    for rentable_address in rentable_addresses:
+        try:
+            description = c.call(rentable_address, 'description()', [], ['string'])[0]
+            deposit = c.call(rentable_address, 'deposit()', [], ['uint256'])[0]
+            location = c.call(rentable_address, 'location()', [], ['string'])[0]
+            costPerSecond = c.call(rentable_address, 'costPerSecond()', [], ['uint256'])[0]
+            current_renter = c.call(rentable_address, 'currentRenter()', [], ['address'])[0]
+            address_sha3 = c.web3_sha3(rentable_address)[:10]
+            topics.append(address_sha3)
+            logger.info('Configured rentable contract {0}\n\
+        description: {1}\n\
+        location: {2}\n\
+        deposit: {3}\n\
+        costPerSecond: {4}\n\
+        current_renter: {5}\n\
+        address sha3: {6}'.format(rentable_address, description, location,
+                                    deposit, costPerSecond, current_renter, address_sha3))
+        except AssertionError:
+            logger.error('Address {0} is not a Rentable'.format(rentable_address))
+            return
 
     symmetric_key_address = c.shh_addSymmetricKeyFromPassword(symmetric_key_password)
-    symmetric_key = c.shh_getSymmetricKey(symmetric_key_address)
-    topic = c.web3_sha3(rentable_address)[:10]
 
-    filter_id = c.shh_subscribe(type='sym', key=symmetric_key_address, sig=None, minPow=None, topics=[topic])
+    filter_id = c.shh_subscribe(type='sym', key=symmetric_key_address, sig=None, minPow=None, topics=topics)
     logger.info('Listen for incomming messages..')
     try:
         while True:
