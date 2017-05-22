@@ -2,7 +2,7 @@
 lokkit doorman
 ===============================
 
-Python service that listens on local ethereum node for incomming whisper messages.
+Python service that listens on an ethereum node for incoming whisper messages.
 Specify your own config.yml and run lokkit_doorman.py.
 
 * Free software: MIT license
@@ -10,8 +10,6 @@ Specify your own config.yml and run lokkit_doorman.py.
 Features
 --------
 
-* TODO: implement correct filter
-* TODO: validate message, make sure its payload is correct, etc
 * TODO: define requirements
 * TODO: testing
 
@@ -31,4 +29,4 @@ As a developer
   pip install --editable lokkit_doorman/ethjsonrpc
 
   # run doorman
-  python lokkit_doorman/lokkit_doorman.py
+  python lokkit_doorman/lokkit_doorman.py [lokkit_doorman/config.yml]
