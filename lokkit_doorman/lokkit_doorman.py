@@ -29,8 +29,10 @@ If you don't specify the <configfile> it will try to read /etc/lokkit/doorman.ym
 
 Example config.yml:
 doorman:
-    node_url: 127.0.0.1:8545
+    node_ip: 127.0.0.1
+    node_rpc_port: 8545
     rentable_address: "0xf16801293f34fc16470729f4ac91185595aa6e10"
+    symmetric_key_password: lokkit
     script: /path/to/script/to/execute.sh
 """
 
@@ -76,6 +78,7 @@ def _parse_config_file(config_filepath):
     ret = ret and _check_if_exists(doc, 'node_ip')
     ret = ret and _check_if_exists(doc, 'node_rpc_port')
     ret = ret and _check_if_exists(doc, 'rentable_address')
+    ret = ret and _check_if_exists(doc, 'symmetric_key_password')
     ret = ret and _check_if_exists(doc, 'script')
 
     if ret:
@@ -134,7 +137,7 @@ def main():
       deposit: {3}\n\
       costPerSecond: {4}\n\
       current_renter: {5}'.format(rentable_address, description, location,
-                      deposit, costPerSecond, current_renter))
+                                  deposit, costPerSecond, current_renter))
     except AssertionError:
         logger.error('Address {0} is not a Rentable'.format(rentable_address))
         return
@@ -149,7 +152,7 @@ def main():
         while True:
             messages = c.shh_getNewSubscriptionMessages(filter_id)
             for message in messages:
-                logger.debug('Message details:\n  hash {0}\n  ttl {1}\n  payload: {2}\n  topic: {2}'
+                logger.debug('Message details:\n  hash {0}\n  ttl {1}\n  payload: {2}\n  topic: {3}'
                         .format(message['hash'], message['ttl'], message['payload'], message['topic']))
 
                 payload = None
@@ -158,7 +161,7 @@ def main():
                     message_payload_string = message['payload'][2:].decode('hex')
                     payload = json.loads(message_payload_string, object_pairs_hook=OrderedDict)
                 except:
-                    logger.error('Error parsing whisper message payload: {0}', message['payload'])
+                    logger.error('Error parsing whisper message payload: {0}'.format(message['payload']))
                     continue
 
                 signature = payload['digest'] # hex value starting with 0x....
@@ -194,7 +197,7 @@ def main():
                 logger.info('Executing script "{0}" with argument "{1}" for rentable "{2}"'.format(script, lokkit_message['command'], lokkit_message['rentableAddress']))
                 subprocess.call([script, lokkit_message['command']])
 
-            sleep(1) # sleep 1 second
+            sleep(1)
     except KeyboardInterrupt:
         pass
 
