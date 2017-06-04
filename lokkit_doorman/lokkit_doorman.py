@@ -166,8 +166,8 @@ def main():
             location = c.call(rentable_address, 'location()', [], ['string'])[0]
             costPerSecond = c.call(rentable_address, 'costPerSecond()', [], ['uint256'])[0]
             current_renter = c.call(rentable_address, 'currentRenter()', [], ['address'])[0]
-            address_sha3 = sha3.keccak_256(rentable_address).hexdigest()
-            topics.append("0x" + address_sha3[:8])
+            address_sha3 = c.web3_sha3(rentable_address)[:10]
+            topics.append(address_sha3)
             logger.info('Configured rentable contract {0}\n\
         description: {1}\n\
         location: {2}\n\
