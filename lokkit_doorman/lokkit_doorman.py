@@ -219,15 +219,22 @@ def main():
                     .format(signer))
 
                 current_renter = c.call(rentable_address, 'currentRenter()', [], ['address'])[0]
-                logger.info('current renter (smart contract)      "{0}"'
-                    .format(signer))
+                logger.info('current renter (smart contract)      "0x{0}"'
+                    .format(current_renter))
 
                 if signer[2:] != current_renter:
                     logger.error('Refuse execution of command "{0}": requester ({1}) is not the current renter ({2}) of rentable "{3}"'
                             .format(lokkit_message['command'], signer, current_renter, lokkit_message['rentableAddress']))
                     continue
+
+                if message['sig'] == '':
+                    logger.error('The envelope was not signed by the sender. Signature with an asymmetric key is required.')
+                    continue
+
                 if key != message['sig']:
                     logger.error('Encrypted public key is not of the sender. Possible replay attack detected')
+                    logger.error(key)
+                    logger.error(message['sig'])
                     continue
 
                 logger.info('Executing script "{0}" with argument "{1}" for rentable "{2}"'.format(script, lokkit_message['command'], lokkit_message['rentableAddress']))
