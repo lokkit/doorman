@@ -10,7 +10,8 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    # TODO: put package requirements here
+    'sha3',
+    'pyyaml'
 ]
 
 test_requirements = [
@@ -28,8 +29,7 @@ setup(
     packages=[
         'lokkit_doorman',
     ],
-    package_dir={'lokkit_doorman':
-                 'lokkit_doorman'},
+    package_dir={ 'lokkit_doorman': 'lokkit_doorman' },
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",

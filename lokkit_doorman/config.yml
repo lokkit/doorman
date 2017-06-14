@@ -2,7 +2,6 @@ doorman:
     node_ip: 127.0.0.1
     node_rpc_port: 8545
     rentable_addresses:
-        - "0xbac41871cf121f6c02d345af52c82c83759a2e3b"
-        - "0xd089b3d41d3028951a5048ba33eadeb73fe8a0fb"
+        - "0x58b5e51386b46d018dcd0a3db91a6c69fed20ea8"
     symmetric_key_password: lokkit
-    script: leFile.bat
+    script: /bin/bash -c logger HUHU

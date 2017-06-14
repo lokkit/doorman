@@ -10,7 +10,7 @@ Specify your own config.yml and run lokkit_doorman.py.
 Features
 --------
 
-* TODO: define requirements
+* TODO: Add ethjsonrpc to setup.py
 * TODO: testing
 
 As a developer

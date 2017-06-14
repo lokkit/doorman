@@ -17,7 +17,7 @@ from ethjsonrpc.exceptions import ConnectionError
 logger = logging.getLogger('lokkitLogger')
 logger.setLevel(logging.INFO)
 if (os.name == 'posix'):
-	logger.addHandler(logging.handlers.SysLogHandler(address = '/dev/log'))
+    logger.addHandler(logging.handlers.SysLogHandler(address='/dev/log'))
 logger.addHandler(logging.StreamHandler()) # log to console
 
 def _print_help():
