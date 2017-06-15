@@ -1,6 +1,3 @@
 [submodule "lokkit_doorman/--force"]
 	path = lokkit_doorman/--force
 	url = git@github.com:lokkit/ethjsonrpc.git
-[submodule "lokkit_doorman/ethjsonrpc"]
-	path = lokkit_doorman/ethjsonrpc
-	url = git@github.com:lokkit/ethjsonrpc.git
