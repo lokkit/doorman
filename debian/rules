@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# export DH_VERBOSE=1
+export PYBUILD_NAME=lokkit-doorman
+export PYBUILD_DESTDIR_python2 = debian/lokkit-doorman
+
+%:
+	dh $@ --with python2 --buildsystem=pybuild
+
+
+
+override_dh_auto_install:
+	dh_auto_install -O--buildsystem=pybuild

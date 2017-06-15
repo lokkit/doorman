@@ -1,0 +1,13 @@
+Source: lokkit-doorman
+Section: python
+Priority: optional
+Maintainer: Andreas Schmid, <ikeark@gmail.com>
+Build-Depends: virtualenv, debhelper (>= 7.4.3), dh-python, dh-systemd
+Standards-Version: 3.9.1
+
+Package: lokkit-doorman
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}
+Description: Listens and validate whisperv5 commands from the blockchain
+ This provides the lokkit-doorman systemd service
