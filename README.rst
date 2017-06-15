@@ -10,7 +10,6 @@ Specify your own config.yml and run lokkit_doorman.py.
 Features
 --------
 
-* TODO: Add ethjsonrpc to setup.py
 * TODO: testing
 
 As a developer
@@ -24,9 +23,8 @@ As a developer
   virtualenv env
   source env/bin/activate
 
-  # install dependency
-  pip install pip --upgrade
-  pip install --editable lokkit_doorman/ethjsonrpc
+  # install doorman
+  pip install --process-dependency-links .
 
   # run doorman
   python lokkit_doorman/lokkit_doorman.py [lokkit_doorman/config.yml]
