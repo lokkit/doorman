@@ -11,7 +11,8 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'sha3',
-    'pyyaml'
+    'pyyaml',
+    'ethjsonrpc<=99.99'
 ]
 
 test_requirements = [
@@ -32,6 +33,7 @@ setup(
     package_dir={ 'lokkit_doorman': 'lokkit_doorman' },
     include_package_data=True,
     install_requires=requirements,
+    dependency_links=['https://github.com/lokkit/ethjsonrpc/archive/master.zip#egg=ethjsonrpc-99.99'],
     license="MIT license",
     zip_safe=False,
     keywords='lokkit_doorman',
