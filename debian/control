@@ -2,7 +2,9 @@ Source: lokkit-doorman
 Section: python
 Priority: optional
 Maintainer: Andreas Schmid, <ikeark@gmail.com>
-Build-Depends: virtualenv, debhelper (>= 7.4.3), dh-python, dh-systemd
+Build-Depends: debhelper (>= 7.4.3), dh-python, dh-systemd,
+ virtualenv,
+ python-all, python-setuptools
 Standards-Version: 3.9.1
 
 Package: lokkit-doorman

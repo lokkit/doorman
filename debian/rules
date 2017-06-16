@@ -6,3 +6,7 @@ export PYBUILD_NAME=doorman
 
 %:
 	dh $@ --with python2 --buildsystem=pybuild
+
+
+override_dh_auto_test:
+	@echo We dunno need no tests...
