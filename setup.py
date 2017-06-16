@@ -30,6 +30,11 @@ setup(
     packages=[
         'doorman',
     ],
+    entry_points={
+        'console_scripts': [
+            'doorman = doorman.__main__:main'
+            ]
+        },
     package_dir={ 'doorman': 'doorman' },
     include_package_data=True,
     install_requires=requirements,
