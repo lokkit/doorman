@@ -3,7 +3,7 @@ lokkit doorman
 ===============================
 
 Python service that listens on an ethereum node for incoming whisper messages.
-Specify your own config.yml and run lokkit_doorman.py.
+Specify your own config.yml and run doorman.py.
 
 * Free software: MIT license
 
@@ -27,10 +27,10 @@ As a developer
   pip install --process-dependency-links .
 
   # run doorman
+  python doorman/doorman.py [doorman/config.yml]
   python lokkit_doorman/lokkit_doorman.py [lokkit_doorman/config.yml]
 
-To send a command to doorman, run the following js lines.
-
+To send a command to doorman using web3, run the following js lines.
 .. code-block:: javascript
 
   var addr = eth.accounts[0]; // todo: set account
@@ -38,7 +38,7 @@ To send a command to doorman, run the following js lines.
   var shhPw = "lokkit"; // needs to be the same as config.yml/doorman/symmetric_key_password. Default: "lokkit"
   var rentableAddress = "0xe7262436a5efd18f79f46fa0a03997238d8dff1c"; // todo: set rentable address
   var command = "unlock"; // todo: set your command
-  
+
   // the following lines should not be changed. This implements the real-time interface for lokkit.
   var key = shh.addSymmetricKeyFromPassword(shhPw);
   var asymKey = shh.newKeyPair();

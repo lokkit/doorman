@@ -20,7 +20,7 @@ test_requirements = [
 ]
 
 setup(
-    name='lokkit_doorman',
+    name='lokkit-doorman',
     version='0.2.0',
     description="Python service that listens on an ethereum node for incoming whisper messages.",
     long_description=readme + '\n\n' + history,
@@ -28,15 +28,15 @@ setup(
     author_email='ikeark@gmail.com',
     url='https://github.com/lokkit/doorman',
     packages=[
-        'lokkit_doorman',
+        'doorman',
     ],
-    package_dir={ 'lokkit_doorman': 'lokkit_doorman' },
+    package_dir={ 'doorman': 'doorman' },
     include_package_data=True,
     install_requires=requirements,
     dependency_links=['https://github.com/lokkit/ethjsonrpc/archive/master.zip#egg=ethjsonrpc-99.99'],
     license="MIT license",
     zip_safe=False,
-    keywords='lokkit_doorman',
+    keywords='lokkit-doorman',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
