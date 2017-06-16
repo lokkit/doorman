@@ -1,0 +1,7 @@
+doorman:
+    node_ip: 127.0.0.1
+    node_rpc_port: 8545
+    rentable_addresses:
+        - "0x58b5e51386b46d018dcd0a3db91a6c69fed20ea8"
+    symmetric_key_password: lokkit
+    script: /bin/bash -c logger HUHU
