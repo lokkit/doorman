@@ -8,7 +8,6 @@ import json
 import subprocess
 from collections import OrderedDict
 from time import sleep
-import sha3
 import yaml
 from ethjsonrpc import EthJsonRpc
 from ethjsonrpc.exceptions import ConnectionError
