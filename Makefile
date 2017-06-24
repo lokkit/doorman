@@ -51,16 +51,16 @@ lint: ## check style with flake8
 	flake8 lokkit_doorman tests
 
 test: ## run tests quickly with the default Python
-	
+
 		python setup.py test
 
 test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
-	
+
 		coverage run --source lokkit_doorman setup.py test
-	
+
 		coverage report -m
 		coverage html
 		$(BROWSER) htmlcov/index.html
@@ -86,4 +86,8 @@ dist: clean ## builds source and wheel package
 	ls -l dist
 
 install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+	mkdir -p /lib/systemd/system/
+	mkdir -p /etc/lokkit/
+	install installer_files/lokkit-doorman.service /lib/systemd/system/lokkit-doorman.service
+	install installer_files/doorman.yml /etc/lokkit/doorman.yml
+	pip install --process-dependency-links .

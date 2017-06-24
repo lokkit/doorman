@@ -1,0 +1,12 @@
+#  This file is part of the lokkit-doorman.
+
+[Unit]
+Description=Start doorman service
+
+[Service]
+Type=simple
+User=lokkit
+ExecStart=/usr/local/bin/doorman /etc/lokkit/doorman.yml
+
+[Install]
+WantedBy=multi-user.target
