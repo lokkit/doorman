@@ -217,7 +217,7 @@ def main():
                 logger.info('signing ethereum account (recovered) "{0}"'
                     .format(signer))
 
-                current_renter = c.call(rentable_address, 'currentRenter()', [], ['address'])[0]
+                current_renter = c.call(lokkit_message['rentableAddress'], 'currentRenter()', [], ['address'])[0]
                 logger.info('current renter (smart contract)      "0x{0}"'
                     .format(current_renter))
 
