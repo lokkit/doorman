@@ -89,5 +89,6 @@ install: clean ## install the package to the active Python's site-packages
 	mkdir -p /lib/systemd/system/
 	mkdir -p /etc/lokkit/
 	install installer_files/lokkit-doorman.service /lib/systemd/system/lokkit-doorman.service
+	systemctl enable lokkit-doorman.service
 	install installer_files/doorman.yml /etc/lokkit/doorman.yml
 	pip install --process-dependency-links .
