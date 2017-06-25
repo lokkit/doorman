@@ -7,7 +7,7 @@ After=lokkit-chain.service
 
 [Service]
 Type=simple
-User=lokkit
+User=pi
 Restart=always
 RestartSec=3
 ExecStart=/usr/local/bin/doorman /etc/lokkit/doorman.yml
